@@ -2,6 +2,7 @@
 #include <list> // list command
 // add on ko lang to sir hehe - kurt
 #include <windows.h>// windows command
+#include <string> // str 
 #include <conio.h>    // For _kbhit() and _getch()
 #include <cstdlib>  // For rand() and srand()
 #include <ctime>    // For time()
@@ -9,6 +10,7 @@
 using namespace std;
 
 bool dev_mode = false;//for debugging purposes
+int num = 0;
 
 struct Sys_function{
 	int locale = 1;
@@ -55,7 +57,7 @@ struct Sys_function{
 struct GUI_Function{
 	string eye[4] = {"0w0","UwU","-u-","$_$"};
 	void header(){// heaeder indecator optional XDDD
-		cout<<"Prototype 1.0.3\t\t stats:"<<rand()<<endl;//version used
+		cout<<"Prototype 2.5.3\t\t stats:"<<rand()<<endl;//version used
 	}
 	int randomNum(int max_num){// random shit number using time and some shit
 		int ran_num;
@@ -149,191 +151,199 @@ struct GUI_Function{
 	}
 }display;
 
-struct Compile{
-	Sys_function fcn_C;
-	GUI_Function gui_C;
-	bool list_on_main = false;
-	bool undersato = true;
-	list<string> real_list;
-	void main_menu(int error){
-		string main[5] = {"[ 1 ] DISPLAY TASKS","[ 2 ] ADD TASK","[ 3 ] REMOVE TASK","[ 4 ] CLEAR TASK","[ 5 ] EXIT"};
-		cout<<gui_C.reference_point(1);
-		if(list_on_main){
-			display_task_opt();
-		}
-		if(error>= 1)	cout<<gui_C.reference_point(2)<<fcn_C.err_log(gui_C.randomNum(8));
-		else			cout<<gui_C.reference_point(2)<<fcn_C.str_log(gui_C.randomNum(8));
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		for(int i = 0; i<= 4; i++)cout<<gui_C.reference_point(4)<<main[i]<<"\n"<<gui_C.reference_point(4)<<endl;
-		cout<<gui_C.reference_point(5);
+struct TaskList{
+	int data_no = num;
+	string data;
+	string data_more;
+	TaskList* next; // next nalang para focus sa incode
+	
+	TaskList(string input, string details){
+		data = input;
+		data_more = details;
+		num++;
+		next = nullptr;
 	}
-	void point_exit(int error){
-		cout<<gui_C.reference_point(1);
-		cout<<gui_C.reference_point(2);
-		if(error>= 1)	fcn_C.animation(" oh your going now? ok farewell huhu!!");	
-		else			cout<<fcn_C.str_log(gui_C.randomNum(8));
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		cout<<gui_C.reference_point(4)<<endl;
-		cout<<gui_C.reference_point(5);
-	}
-	void add_list_phase(int error){
-		string main[3] = {"[ 1 ] URGENT TASK", "[ 2 ] LOW PRIORITY TASK", "[ 3 ] CANCEL"};
-		cout<<gui_C.reference_point(1);
-		cout<<gui_C.reference_point(2);
-		if(error >= 1) 	cout<<fcn_C.err_log(gui_C.randomNum(8));
-		else		cout<<"What type of task you want to add right now?";
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		for(int i = 0; i <= 2; i++) cout<<gui_C.reference_point(4)<<main[i]<<"\n"<<gui_C.reference_point(4)<<endl;
-		cout<<gui_C.reference_point(5);
-	}
-	void task_query_add(int type){
-		string main[2] = {"TASK NAME", "SUBJECT"};
-		string lab[2];
-		string complete_task_name;
-		cout<<gui_C.reference_point(1);
-		cout<<gui_C.reference_point(2);
-		cout<<"Pls input the following";
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		for(int i = 0; i <= 1; i++) {
-			string input;
-			cout<<gui_C.reference_point(4)<<main[i]<<": ";
-			getline(cin, input);
-			lab[i] = input;
-			cout<<gui_C.reference_point(4)<<endl;
-		}
-		cout<<gui_C.reference_point(5);
-		fcn_C.animation("\tSaving task.");
-		for(int y = 0; y <= 1; y++){
-			complete_task_name += lab[y] + "\t";
-			cout<<".";
-			sleep(1);
-		}
-		switch(type){
-			case 1:
-				real_list.push_front(complete_task_name);
-				fcn_C.animation("Added as Urgent task");
-				break;
-			case 2:
-				real_list.push_back(complete_task_name);
-		}
-	}
-	void display_task_opt(){
-		string detail[3] = {"NO.","TASK NAME","DETAILS" };
-		cout<<gui_C.reference_point(4);
-		for(int i = 0; i<=2;i++) cout<<detail[i]<<"\t";
-		cout<<endl;
-		if(real_list.size() != 0 ){
-			int num = 1;
-			for (const auto& item : real_list) {
-	    		cout<<gui_C.reference_point(4)<<"[ "<<num<<" ]\t"<<item <<endl;
-	    		num++;
+};
+
+class Compile{
+	private:
+		Sys_function fcn_C;
+		GUI_Function gui_C;
+		TaskList* head;
+	public:
+		bool list_on_main = false;
+		bool undersato = true;
+		void main_menu(int error){
+			string main[5] = {"[ 1 ] DISPLAY TASKS","[ 2 ] ADD TASK","[ 3 ] REMOVE TASK","[ 4 ] CLEAR TASK - NOT OPERATIONAL","[ 5 ] EXIT"};
+			cout<<gui_C.reference_point(1);
+			if(list_on_main){
+				display_task_opt();
 			}
+			if(error>= 1)	cout<<gui_C.reference_point(2)<<fcn_C.err_log(gui_C.randomNum(8));
+			else			cout<<gui_C.reference_point(2)<<fcn_C.str_log(gui_C.randomNum(8));
+			cout<<endl;
+			cout<<gui_C.reference_point(3)<<endl;
+			for(int i = 0; i<= 4; i++)cout<<gui_C.reference_point(4)<<main[i]<<"\n"<<gui_C.reference_point(4)<<endl;
+			cout<<gui_C.reference_point(5);
 		}
-		else
-			cout<<gui_C.reference_point(4)<<"[* NO TASK IS RECORDED *]"<<endl;
-		cout<<gui_C.reference_point(4)<<endl;
-	}
-	void display_task_all(){
-		cout<<gui_C.reference_point(1);
-		cout<<gui_C.reference_point(2);
-		if(real_list.size() != 0)
-			cout<<"Here's the task you input..";
-		else
-			cout<<"it seems you still havent input a task yet..";
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		display_task_opt();
-		if(gui_C.randomNum(2) == 2) cout<<gui_C.reference_point(4)<<"//type '*' on the command so you can view the task on MAIN MENU"<<endl;
-		cout<<gui_C.reference_point(5);
-		cout<<"\t";system("pause");
-	}
-	void clear_all_task(bool question){
-		if(question){
+		void point_exit(int error){
 			cout<<gui_C.reference_point(1);
 			cout<<gui_C.reference_point(2);
-			if(real_list.size() != 0){
-				cout<<"Removing all task...";
-				fcn_C.animation("...Complete");
-				real_list.clear();
-			}
-			else
-				cout<<"No Task is recorded so no Data is removed...";
+			if(error>= 1)	fcn_C.animation(" oh your going now? ok farewell huhu!!");	
+			else			cout<<fcn_C.str_log(gui_C.randomNum(8));
 			cout<<endl;
 			cout<<gui_C.reference_point(3)<<endl;
 			cout<<gui_C.reference_point(4)<<endl;
 			cout<<gui_C.reference_point(5);
-			cout<<"\t";system("pause");
 		}
-		else {	
-			string lan[2] = {"[ 1 ] YES", "[ 2 ] NO"};
+		void add_list_phase(int error){
+			string main[3] = {"[ 1 ] URGENT TASK", "[ 2 ] LOW PRIORITY TASK", "[ 3 ] CANCEL"};
 			cout<<gui_C.reference_point(1);
-			cout<<gui_C.reference_point(2)<<"Are you sure you want to clear your task?"<<endl;
-			cout<<gui_C.reference_point(3)<<"this action is not reversable.."<<endl;
-			for(int i = 0; i <= 1; i++)	cout<<gui_C.reference_point(4)<<"\n"<<gui_C.reference_point(4)<<lan[i]<<endl;
+			cout<<gui_C.reference_point(2);
+			if(error >= 1) 	cout<<fcn_C.err_log(gui_C.randomNum(8));
+			else		cout<<"What type of task you want to add right now?";
+			cout<<endl;
+			cout<<gui_C.reference_point(3)<<endl;
+			for(int i = 0; i <= 2; i++) cout<<gui_C.reference_point(4)<<main[i]<<"\n"<<gui_C.reference_point(4)<<endl;
 			cout<<gui_C.reference_point(5);
 		}
-	}
-	bool remove_task(){ //display for remove
-		int num = 1;
-		cout<<gui_C.reference_point(1);
-		cout<<gui_C.reference_point(2);
-		if(real_list.size() != 0){
-			cout<<"Which task you want to remove?..."<<real_list.size();	
-		}else{
-			cout<<"it seems you still havent input a task yet..";
-		}
-		cout<<endl;
-		cout<<gui_C.reference_point(3)<<endl;
-		if(real_list.size() != 0){
-			for (const auto& item : real_list)	{
-				cout<<gui_C.reference_point(4)<<"[ "<<num<<" ] "<<item<<"\n"<<gui_C.reference_point(4)<<endl;	
-				num++;
+		// node modify starts here for adding
+			void add_UrgentList(string name, string details) {
+		        TaskList* newList = new TaskList(name, details);
+		        newList->next = head;
+		        head = newList;
+		    }
+		    void add_LowPriority(string name, string details) {
+		        TaskList* newList = new TaskList(name, details);
+		        if (head == nullptr) {
+		            head = newList;
+		        } else {
+		            TaskList* Tempo_List = head;
+		            while (Tempo_List->next != nullptr) {
+		                Tempo_List = Tempo_List->next;
+		            }
+		            Tempo_List->next = newList;
+		        }
+		    }
+		//ends here
+		void task_query_add(int type){
+			string main[2] = {"TASK NAME", "DETAILS"};
+			string lab[2];
+			cout<<gui_C.reference_point(1);
+			cout<<gui_C.reference_point(2);
+			cout<<"Pls input the following"<<endl;
+			cout<<gui_C.reference_point(3)<<endl;
+			for(int i = 0; i <= 1; i++) {
+				string input;
+				cout<<gui_C.reference_point(4)<<main[i]<<": ";
+				getline(cin, input);
+				lab[i] = input;
+				cout<<gui_C.reference_point(4)<<endl;
+			}
+			cout<<gui_C.reference_point(5);
+			fcn_C.animation("\tSaving task.");
+				cout<<".";
+				sleep(1);
+			switch(type){
+				case 1:
+					add_UrgentList(lab[0],lab[1]);
+					fcn_C.animation("Added as Urgent task");
+					break;
+				case 2:
+					add_LowPriority(lab[0],lab[1]);
+					fcn_C.animation("Added as Low Priority task");
+					break;
 			}
 		}
-		cout<<gui_C.reference_point(5);
-		cout<<"\t";	system("pause");
-		if(real_list.size() != 0){
-			return undersato = false;
+		
+		void display_task_opt(){// Newly Modified Display
+			string detail[3] = {"ID.","TASK NAME","DETAILS" };
+			cout<<gui_C.reference_point(4);
+			for(int i = 0; i<=2;i++) cout<<detail[i]<<"\t";
+			cout<<endl;
+			if (head == nullptr) {
+				cout<<gui_C.reference_point(4)<<"[* NO TASK IS RECORDED *]"<<endl;
+				return;
+			}
+			TaskList* temp = head;
+			while (temp != nullptr) {
+				cout<<gui_C.reference_point(4)<<temp->data_no<<"\t"<< temp->data << "\t"<<temp->data_more<<endl;
+				temp = temp->next;
+			}
+			cout << endl;
+			cout<<gui_C.reference_point(4)<<endl;
 		}
-		else return undersato = true;
-	}
-	void remove_function(int remove_number){//remove function because i want too XD
-		string storage[real_list.size()];
-		int lan = real_list.size();
-		int y = 0, l=0;
-		for (const auto& item : real_list) {
-	    		storage[y] = item;
-				y++;
+		void display_task_all(){
+			cout<<gui_C.reference_point(1);
+			cout<<gui_C.reference_point(2);
+			if(head == nullptr)
+				cout<<"Here's the task you input..";
+			else
+				cout<<"it seems you still havent input a task yet..";
+			cout<<endl;
+			cout<<gui_C.reference_point(3)<<endl;
+			display_task_opt();
+			if(gui_C.randomNum(2) == 2) cout<<gui_C.reference_point(4)<<"//type '*' on the command so you can view the task on MAIN MENU"<<endl;
+			cout<<gui_C.reference_point(5);
+			cout<<"\t";system("pause");
 		}
-		if(dev_mode){
-			cout<<"before: "<<real_list.size()<<endl;
-			cout<<"B-RE:"<<remove_number<<endl;
+		void clear_all_task(bool question){
+				cout<<gui_C.reference_point(1);
+				cout<<gui_C.reference_point(2);
+				cout<<"Sorry but this task not on operational";
+				cout<<endl;
+				cout<<gui_C.reference_point(3)<<endl;
+				cout<<gui_C.reference_point(4)<<endl;
+				cout<<gui_C.reference_point(4)<<"REASON:"<<endl;
+				cout<<gui_C.reference_point(4)<<"\tTHE PROFFESSOR DECLARE THAT CLEAR TASK WILL"<<endl;
+				cout<<gui_C.reference_point(4)<<"\tNOT BE INCLUDED IN THIS ACTIVITY"<<endl;
+				cout<<gui_C.reference_point(4)<<endl;
+				cout<<gui_C.reference_point(5);
+				cout<<"\t";system("pause");
 		}
-		real_list.clear();
-		if(lan>= 1){
-			for(int i = 0; i < y ;i++){
-				if(i != remove_number){
-					if(dev_mode)cout<<"\t-"<<storage[i]<<endl;
-					real_list.push_back(storage[i]);
-				}else{
-					if(dev_mode)cout<<"\t!>"<<storage[i]<<endl;
+		bool remove_task(){ //display for remove
+			int num = 1;
+			cout<<gui_C.reference_point(1);
+			cout<<gui_C.reference_point(2);
+			if(head != nullptr){
+				cout<<"Which task you want to remove?...";	
+			}else{
+				cout<<"it seems you still havent input a task yet..";
+			}
+			cout<<endl;
+			cout<<gui_C.reference_point(3)<<endl;
+			if(head != nullptr){
+				TaskList* temp = head;
+				while (temp != nullptr) {
+					cout<<gui_C.reference_point(4)<<temp->data_no<<"\t"<< temp->data << "\t"<<temp->data_more<<endl;
+					temp = temp->next;
 				}
-				l = i;
+				cout << endl;
 			}
-			
+			cout<<gui_C.reference_point(5);
+			cout<<"\t";	system("pause");
+			if(head != nullptr){
+				return undersato = false;
+			}
+			else return undersato = true;
 		}
-		if(dev_mode){
-			cout<<"after: "<<real_list.size()<<endl;
-			cout<<"A-RE:"<<remove_number<<endl;
-			cout<<"I: "<<l<<endl;
-			cout<<"recheck: "<<real_list.size()<<endl;
-			system("pause");
+		void remove_function(int Target_Number){//remove function because i want too XD
+			TaskList* Target = head;
+	        TaskList* prev = nullptr;  // To keep track of the previous node
+	        while (Target != nullptr) {  // Traverse the list to find the target
+	            if (Target->data_no == Target_Number) {
+	                if (Target == head) {  // If the target is the head of the list
+	                    head = head->next;  // Move the head pointer to the next node
+	                } else {
+	                    prev->next = Target->next;  // Bypass the target node
+	                }
+	                delete Target;  // Delete the target node
+	                return;
+	            }
+	            prev = Target;  // Move to the next node
+	            Target = Target->next;
+	        }
 		}
-	}
 }cp;
 
 int main (){
@@ -374,12 +384,10 @@ int main (){
 				break;
 			case 5://clear task
 				cp.clear_all_task(ene);
-				if(ene){
-					fcn.locale = 1;
-					ene = false;
-					clear = false;
-					goto rebot;
-				}
+				fcn.locale = 1;
+				ene = false;
+				clear = false;
+				goto rebot;
 				break;
 			case 6:
 				cp.point_exit(error);
@@ -388,7 +396,7 @@ int main (){
 				display.loading(20);
 				return 0;
 			case 7:
-				cp.remove_function(rev_num-1);
+				cp.remove_function(rev_num);
 				fcn.locale = 1;
 				goto rebot;
 				break;
